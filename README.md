@@ -1,0 +1,1 @@
+# django-fullstack-2022
