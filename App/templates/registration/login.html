@@ -27,28 +27,38 @@
                 </div>
                 <div class="col-md-6 col-lg-7 d-flex align-items-center">
                 <div class="card-body p-4 p-lg-5 text-black">
-    
+
                     <form method="POST" autocomplete="off" novalidate>
                         {% csrf_token %}
                         <div class="d-flex align-items-center mb-3 pb-1">
                             <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
                             <span class="h1 fw-bold mb-0">Logo</span>
                         </div>
-        
+                        
                         <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
         
+                        {% comment %} ALERT {% endcomment %}
+                        {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Invalid!</strong> Please check your username or password again.
+                            <button type="button" id="close_alert_login" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        
                         <div class="form-outline mb-4">
-                            <input type="text" name="username" class="form-control form-control-lg" />
+                            <div id="username_warning" class="text-danger"></div>
+                            <input type="text" name="username" id="username" class="form-control form-control-lg" />
                             <label class="form-label" for="username">Username</label>
                         </div>
         
                         <div class="form-outline mb-4">
-                            <input type="password" name="password" class="form-control form-control-lg" />
+                            <div id="password_warning" class="text-danger"></div>
+                            <input type="password" name="password" id="password" class="form-control form-control-lg" />
                             <label class="form-label" for="password">Password</label>
                         </div>
         
                         <div class="pt-1 mb-4">
-                            <input class="btn btn-dark btn-lg btn-block" type="submit" value="Save"></input>
+                            <input class="btn btn-dark btn-lg btn-block" id="login_button" type="submit" value="Login"></input>
                         </div>
         
                         <a class="small text-muted" href="#!">Forgot password?</a>
@@ -65,4 +75,12 @@
         </div>
     </div>
 </section>
+
+{% comment %} {% if form.errors %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    swal("Failed to Login", "Please check your Username & Password", "error"); 
+</script>
+{% endif %} {% endcomment %}
+
 {% endblock content %}
