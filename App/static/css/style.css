@@ -1,0 +1,14 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+.bg-frontend {
+    height: 100%;
+    background: white url("../img/welcome.jpg") no-repeat; 
+    background-position: center;
+    width: 100vw; min-height: 100vh;
+    background-size: cover; 
+}
