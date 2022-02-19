@@ -11,10 +11,14 @@
 {% endblock btn-nav %}  
 
 {% block content %} 
-<div class="row justify-content-center">
-    <div class="col-auto">
-        <h1 class="text-danger"> Backend Page </h1>
+<div class="container mt-3">
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'add_patient' %}" class="btn btn-outline-primary">
+            <i class="fa fa-plus-circle"></i> &nbsp; Add user
+        </a>
+        <span>
+            Welcome: <strong><span class="text-primary"> {{ user.username }} </span></strong>
+        </span>
     </div>
 </div>
- 
 {% endblock content %}

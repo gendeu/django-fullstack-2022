@@ -8,7 +8,8 @@ class Patient(models.Model):
     )
 
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=40)
+    firstname = models.CharField(max_length=40)
+    lastname = models.CharField(max_length=40)
     phone = models.CharField(max_length=20)
     email = models.CharField(max_length=40)
     age = models.CharField(max_length=3)

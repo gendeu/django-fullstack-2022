@@ -29,4 +29,6 @@ urlpatterns = [
     # -------------  Backend Section  ----------------
     # Path to Backend
     path('backend/', views.backend, name="backend"),
+    # Path to Add Patient
+    path('add_patient', views.add_patient, name="add_patient"),
 ]
