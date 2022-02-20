@@ -54,3 +54,11 @@ def add_patient(request):
             return HttpResponseRedirect('/backend')
     else:
         return render(request, "backend.html")
+
+
+# PATIENTS' ACCESS HERE
+# @login_required(login_url="login")
+# def patient(request, patient_id):
+#     patient = Patient.objects.get(id = patient_id)
+#     if patient != None:
+#         return render(request, "edit.html", {patient:'patient'})

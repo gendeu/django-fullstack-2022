@@ -35,7 +35,122 @@
     {% endfor %}
 </div>
 
-<!-- MODAL ADD USER -->
+<!-- LIST OF PATIENTS -->
+<div class="container">
+    <div class="table-wrapper">
+        <div class="table-title bg-white text-dark">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Manage <b>Patients</b></h2>
+                </div>
+                <div class="col-sm-6">
+                    <a href="#add_patient_modal" data-bs-toggle="modal" class="btn btn-success">
+                        <i class="far fa-plus-square"></i> <span>Add Patient</span>
+                    </a>
+                    <a href="#delete_patient_modal" data-bs-toggle="modal" class="btn btn-danger">
+                        <i class="far fa-file-excel"></i> <span>Delete All</span>
+                    </a>
+                    <form class="d-flex input-group w-auto">
+                        <input type="text" name="q" class="form-control" placeholder="Type query" aria-label="Search">
+                        <button class="btn btn-dark">
+                          Search
+                        </button>
+                        <a href="{% url 'backend' %}" class="d-flex justify-content-center align-items-center btn btn-outline-primary text-dark">
+                            <i class="fas fa-sync-alt"></i>
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <span class="custom-checkbox">
+                            <input type="checkbox" id="selectAll">
+                            <label for="selectAll"></label>
+                        </span>
+                    </th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th>Notes</th>
+                    <th>Created At</th>
+                    <th colspan="3" class="text-center" style="width: 10%;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in patients %}
+                <tr>
+                    <td>
+                        <span class="custom-checkbox">
+                            <input type="checkbox" id="checkbox1" name="options[]" value="1">
+                            <label for="checkbox1"></label>
+                        </span>
+                    </td>
+                    <td id="patient_id">{{ patient.id }}</td>
+                    <td id="firstname">{{ patient.firstname }}</td>
+                    <td id="lastname">{{ patient.lastname }}</td>
+                    <td id="email">{{ patient.email }}</td>
+                    <td id="age">{{ patient.age }}</td>
+                    <td id="gender">{{ patient.gender }}</td>
+                    <td id="phone">{{ patient.phone }}</td>
+                    <td id="note">{{ patient.note }}</td>
+                    <td id="created_at">{{ patient.created_at | date:'m/d/Y (H:i)' }}</td>
+                    <td>
+                        <a href="#view_patient_modal" data-bs-toggle="modal" class="view" ><i class="far fa-id-card"></i></a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline edit_patient_click fas fa-pencil-alt noUnderlineCustom text-primary" data-toggle="modal" data-target="#edit_patient_modal"></button>
+                        <!-- <button class="btn btn-outline edit_patient_click">
+                            <a href="#edit_patient_modal" data-bs-toggle="modal" class="edit"><i class="far fa-edit"></i></a>
+                        </button> -->
+                    </td>
+                    <td>
+                        <a href="remove_patient_modal" data-bs-toggle="modal" class="delete" id=""><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="clearfix">
+            {% if patients.has_other_pages %}
+
+            <div class="hint-text">Showing <b>{{ patients|length }}</b> out of <b>{{ all_patients|length }}</b> entries</div>
+            
+                <ul class="pagination">
+                {% if patients.has_previous %}
+                    <li class="page-item"><a href="?page=1">First</a></li>
+                    <li class="page-item"><a href="?page={{ patients.previous_page_number }}"><i class="fas fa-angle-double-left"></i></a></li>
+                {% else %}
+                    <li class="page-item disabled"></li>
+                {% endif %}
+                
+                {% for i in patients.paginator.page_range %}
+                    {% if patients.number == i %}
+                        <li class="page-item active"><a href="">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if patients.has_next %}
+                    <li class="page-item"><a href="?page={{ patients.next_page_number }}"><i class="fas fa-angle-double-right"></i></a></li>     
+                    <li class="page-item"><a href="?page={{ patients.paginator.num_pages }}">Last</a></li> 
+                {% else %}
+                    <li class="page-item disabled"></li>
+                {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL ADD PATIENT -->
 <div class="modal fade" id="add_patient_modal" aria-hidden="true" aria-labelledby="add_patient_modalLabel" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -118,14 +233,104 @@
             </div>
             <div class="modal-footer">
                 <div class="mt-4 pt-2">
-                    <input class="btn btn-primary btn-lg" form="add_patient" type="submit" value="Submit" />
+                    <input class="btn btn-success btn-lg" form="add_patient" type="submit" value="Save" />
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- MODAL DELETE USER -->
+<!-- MODAL EDIT PATIENT -->
+<div class="modal fade" id="edit_patient_modal" aria-hidden="true" aria-labelledby="edit_patient_modalLabel" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body m-3">
+                <form action="/update_patient" id="add_patient" method="POST" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                        <input type="text" id="patient_firstname" name="firstname" class="form-control form-control-lg" />
+                        <label class="form-label" for="firstName">First Name</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                        <input type="text" id="patient_lastname" name="lastname" class="form-control form-control-lg" />
+                        <label class="form-label" for="lastName">Last Name</label>
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                    <div class="form-outline datepicker w-100">
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="patient_age"
+                        name="age"
+                        />
+                        <label for="birthdayDate" class="form-label">Age</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+
+                    <select class="form-select form-select-lg" id="patient_gender" name="gender" aria-label=".form-select-lg example">
+                        <option value="M" selected>M</option>
+                        <option value="F">F</option>
+                    </select>
+                    <label for="gender" class="form-label">Gender</label>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4 pb-2">
+
+                    <div class="form-outline">
+                        <input type="email" id="patient_email" name="email" class="form-control form-control-lg" />
+                        <label class="form-label" for="email">Email</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4 pb-2">
+
+                    <div class="form-outline">
+                        <input type="tel" id="patient_phone" name="phone" class="form-control form-control-lg" />
+                        <label class="form-label" for="phone">Phone Number</label>
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="form-outline">
+                    <textarea class="form-control" id="patient_note" name="note" rows="4"></textarea>
+                    <label class="form-label" for="note">Notes</label>
+                </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="mt-4 pt-2">
+                    <input class="btn btn-success btn-lg" form="update_patient" type="submit" value="Update" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DELETE PATIENT -->
 <div id="delete_patient_modal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -147,115 +352,4 @@
     </div>
 </div>
 
-<!-- LIST OF PATIENTS -->
-<div class="container">
-    <div class="table-wrapper">
-        <div class="table-title">
-            <div class="row">
-                <div class="col-sm-6">
-                    <h2>Manage <b>Patients</b></h2>
-                </div>
-                <div class="col-sm-6">
-                    <a href="#add_patient_modal" data-bs-toggle="modal" class="btn btn-success" data-toggle="modal">
-                        <i class="material-icons"></i> <span>Add Patient</span>
-                    </a>
-                    <a href="#delete_patient_modal" data-bs-toggle="modal" class="btn btn-danger" data-toggle="modal">
-                        <i class="material-icons">&#xE15C;</i> <span>Delete All</span>
-                    </a>
-                    <form class="d-flex input-group w-auto">
-                        <input type="search" name="q" class="form-control" placeholder="Type query" aria-label="Search">
-                        <a href="{% url 'backend' %}" class="btn btn-outline-primary" type="button" data-mdb-ripple-color="dark">
-                          Search
-                        </a>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>
-                        <span class="custom-checkbox">
-                            <input type="checkbox" id="selectAll">
-                            <label for="selectAll"></label>
-                        </span>
-                    </th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Phone</th>
-                    <th>Notes</th>
-                    <th>Created At</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for patient in patients %}
-                <tr>
-                    <td>
-                        <span class="custom-checkbox">
-                            <input type="checkbox" id="checkbox1" name="options[]" value="1">
-                            <label for="checkbox1"></label>
-                        </span>
-                    </td>
-                    <td>{{ patient.firstname }}</td>
-                    <th>{{ patient.lastname }}</th>
-                    <th>{{ patient.email }}</th>
-                    <th>{{ patient.age }}</th>
-                    <th>{{ patient.gender }}</th>
-                    <th>{{ patient.phone }}</th>
-                    <th>{{ patient.note }}</th>
-                    <th>{{ patient.created_at | date:'m/d/Y (H:i)' }}</th>
-                    <td>
-                        <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                        <a href="#delete_patient_modal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="clearfix">
-            {% if patients.has_other_pages %}
-
-            <div class="hint-text">Showing <b>5</b> out of <b>{{ all_patients|length }}</b> entries</div>
-            
-                <ul class="pagination">
-                {% if patients.has_previous %}
-                    <li class="page-item"><a href="?page=1">First</a></li>
-                    <li class="page-item"><a href="?page={{ patients.previous_page_number }}"><i class="fas fa-angle-double-left"></i></a></li>
-                {% else %}
-                    <li class="page-item disabled"></li>
-                {% endif %}
-                
-                {% for i in patients.paginator.page_range %}
-                    {% if patients.number == i %}
-                        <li class="page-item active"><a href="">{{ i }}</a></li>
-                    {% else %}
-                        <li class="page-item"><a href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-
-                {% if patients.has_next %}
-                    <li class="page-item"><a href="?page={{ patients.next_page_number }}"><i class="fas fa-angle-double-right"></i></a></li>     
-                    <li class="page-item"><a href="?page={{ patients.paginator.num_pages }}">Last</a></li> 
-                {% else %}
-                    <li class="page-item disabled"></li>
-                {% endif %}
-                </ul>
-            {% endif %}
-            <!-- <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-            <ul class="pagination">
-                <li class="page-item disabled"><a href="#">Previous</a></li>
-                <li class="page-item"><a href="#" class="page-link">1</a></li>
-                <li class="page-item"><a href="#" class="page-link">2</a></li>
-                <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                <li class="page-item"><a href="#" class="page-link">4</a></li>
-                <li class="page-item"><a href="#" class="page-link">5</a></li>
-                <li class="page-item"><a href="#" class="page-link">Next</a></li>
-            </ul> -->
-        </div>
-    </div>
-</div>
 {% endblock content %}

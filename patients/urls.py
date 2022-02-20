@@ -31,4 +31,7 @@ urlpatterns = [
     path('backend/', views.backend, name="backend"),
     # Path to Add Patient
     path('add_patient', views.add_patient, name="add_patient"),
+
+    # Path Access of Patients
+    # path('patient/<str:patient_id>', views.patient, name="patient"),
 ]
