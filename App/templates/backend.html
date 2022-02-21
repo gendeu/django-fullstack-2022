@@ -22,7 +22,7 @@
     {% for message in messages %}
         {% if message.tags == 'success'  %}
         <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-            <strong>Success!</strong> A Patient has been added to the list.
+            <strong>Success!</strong> {{ message }}
             <button type="button" id="close_alert_login" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
@@ -47,7 +47,7 @@
                     <a href="#add_patient_modal" data-bs-toggle="modal" class="btn btn-success">
                         <i class="far fa-plus-square"></i> <span>Add Patient</span>
                     </a>
-                    <a href="#delete_patient_modal" data-bs-toggle="modal" class="btn btn-danger">
+                    <a href="#delete_all_patient_modal" data-bs-toggle="modal" class="btn btn-danger">
                         <i class="far fa-file-excel"></i> <span>Delete All</span>
                     </a>
                     <form class="d-flex input-group w-auto">
@@ -84,14 +84,14 @@
             </thead>
             <tbody>
                 {% for patient in patients %}
-                <tr>
+                <tr id="check_patient_data">
                     <td>
                         <span class="custom-checkbox">
                             <input type="checkbox" id="checkbox1" name="options[]" value="1">
                             <label for="checkbox1"></label>
                         </span>
                     </td>
-                    <td id="patient_id">{{ patient.id }}</td>
+                    <td id="patient_id" hidden>{{ patient.id }}</td>
                     <td id="firstname">{{ patient.firstname }}</td>
                     <td id="lastname">{{ patient.lastname }}</td>
                     <td id="email">{{ patient.email }}</td>
@@ -101,22 +101,35 @@
                     <td id="note">{{ patient.note }}</td>
                     <td id="created_at">{{ patient.created_at | date:'m/d/Y (H:i)' }}</td>
                     <td>
-                        <a href="#view_patient_modal" data-bs-toggle="modal" class="view" ><i class="far fa-id-card"></i></a>
+                        <button 
+                            type="button" 
+                            class="btn btn-outline view_patient_click fas fa-id-card-alt noUnderlineCustom text-success" 
+                            data-toggle="modal" 
+                            data-target="#view_patient_modal">
+                        </button>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-outline edit_patient_click fas fa-pencil-alt noUnderlineCustom text-primary" data-toggle="modal" data-target="#edit_patient_modal"></button>
-                        <!-- <button class="btn btn-outline edit_patient_click">
-                            <a href="#edit_patient_modal" data-bs-toggle="modal" class="edit"><i class="far fa-edit"></i></a>
-                        </button> -->
+                        <button 
+                            type="button" 
+                            class="btn btn-outline edit_patient_click fas fa-pencil-alt noUnderlineCustom text-primary">
+                        </button>
                     </td>
                     <td>
-                        <a href="remove_patient_modal" data-bs-toggle="modal" class="delete" id=""><i class="far fa-trash-alt"></i></a>
+                        <button 
+                            type="button" 
+                            class="btn btn-outline delete_patient_click fas fa-trash-alt noUnderlineCustom text-danger">
+                        </button>
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <div class="clearfix">
+
+            <!-- CHECK IF NO DATA -->
+            <h4 class="text-center" id="no_patient_data"></h4>
+
             {% if patients.has_other_pages %}
 
             <div class="hint-text">Showing <b>{{ patients|length }}</b> out of <b>{{ all_patients|length }}</b> entries</div>
@@ -149,207 +162,6 @@
     </div>
 </div>
 
-
-<!-- MODAL ADD PATIENT -->
-<div class="modal fade" id="add_patient_modal" aria-hidden="true" aria-labelledby="add_patient_modalLabel" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="add_patient_modalLabel">Registration Form</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body m-3">
-                <form action="/add_patient" id="add_patient" method="POST" autocomplete="off" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                        <input type="text" id="firstName" name="firstname" class="form-control form-control-lg" />
-                        <label class="form-label" for="firstName">First Name</label>
-                    </div>
-
-                    </div>
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                        <input type="text" id="lastName" name="lastname" class="form-control form-control-lg" />
-                        <label class="form-label" for="lastName">Last Name</label>
-                    </div>
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-4 d-flex align-items-center">
-
-                    <div class="form-outline datepicker w-100">
-                        <input
-                        type="text"
-                        class="form-control form-control-lg"
-                        id="age"
-                        name="age"
-                        />
-                        <label for="birthdayDate" class="form-label">Age</label>
-                    </div>
-
-                    </div>
-                    <div class="col-md-6 mb-4">
-
-                    <select class="form-select form-select-lg" name="gender" aria-label=".form-select-lg example">
-                        <option value="M" selected>M</option>
-                        <option value="F">F</option>
-                    </select>
-                    <label for="gender" class="form-label">Gender</label>
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-4 pb-2">
-
-                    <div class="form-outline">
-                        <input type="email" id="emailAddress" name="email" class="form-control form-control-lg" />
-                        <label class="form-label" for="emailAddress">Email</label>
-                    </div>
-
-                    </div>
-                    <div class="col-md-6 mb-4 pb-2">
-
-                    <div class="form-outline">
-                        <input type="tel" id="phoneNumber" name="phone" class="form-control form-control-lg" />
-                        <label class="form-label" for="phoneNumber">Phone Number</label>
-                    </div>
-
-                    </div>
-                </div>
-
-                <div class="form-outline">
-                    <textarea class="form-control" id="note" name="note" rows="4"></textarea>
-                    <label class="form-label" for="textAreaExample">Notes</label>
-                </div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="mt-4 pt-2">
-                    <input class="btn btn-success btn-lg" form="add_patient" type="submit" value="Save" />
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL EDIT PATIENT -->
-<div class="modal fade" id="edit_patient_modal" aria-hidden="true" aria-labelledby="edit_patient_modalLabel" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body m-3">
-                <form action="/update_patient" id="add_patient" method="POST" autocomplete="off" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                        <input type="text" id="patient_firstname" name="firstname" class="form-control form-control-lg" />
-                        <label class="form-label" for="firstName">First Name</label>
-                    </div>
-
-                    </div>
-                    <div class="col-md-6 mb-4">
-
-                    <div class="form-outline">
-                        <input type="text" id="patient_lastname" name="lastname" class="form-control form-control-lg" />
-                        <label class="form-label" for="lastName">Last Name</label>
-                    </div>
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-4 d-flex align-items-center">
-
-                    <div class="form-outline datepicker w-100">
-                        <input
-                        type="text"
-                        class="form-control form-control-lg"
-                        id="patient_age"
-                        name="age"
-                        />
-                        <label for="birthdayDate" class="form-label">Age</label>
-                    </div>
-
-                    </div>
-                    <div class="col-md-6 mb-4">
-
-                    <select class="form-select form-select-lg" id="patient_gender" name="gender" aria-label=".form-select-lg example">
-                        <option value="M" selected>M</option>
-                        <option value="F">F</option>
-                    </select>
-                    <label for="gender" class="form-label">Gender</label>
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-4 pb-2">
-
-                    <div class="form-outline">
-                        <input type="email" id="patient_email" name="email" class="form-control form-control-lg" />
-                        <label class="form-label" for="email">Email</label>
-                    </div>
-
-                    </div>
-                    <div class="col-md-6 mb-4 pb-2">
-
-                    <div class="form-outline">
-                        <input type="tel" id="patient_phone" name="phone" class="form-control form-control-lg" />
-                        <label class="form-label" for="phone">Phone Number</label>
-                    </div>
-
-                    </div>
-                </div>
-
-                <div class="form-outline">
-                    <textarea class="form-control" id="patient_note" name="note" rows="4"></textarea>
-                    <label class="form-label" for="note">Notes</label>
-                </div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="mt-4 pt-2">
-                    <input class="btn btn-success btn-lg" form="update_patient" type="submit" value="Update" />
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL DELETE PATIENT -->
-<div id="delete_patient_modal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form>
-                <div class="modal-header">						
-                    <h4 class="modal-title">Delete Employee</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">					
-                    <p>Are you sure you want to delete these Records?</p>
-                    <p class="text-warning"><small>This action cannot be undone.</small></p>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-default" data-bs-dismiss="modal" value="Cancel">
-                    <input type="submit" class="btn btn-danger" value="Delete">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+{% include 'includes/modals.html' %}
 
 {% endblock content %}

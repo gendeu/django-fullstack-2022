@@ -1,0 +1,224 @@
+
+<!-- MODAL ADD PATIENT -->
+<div class="modal fade" id="add_patient_modal" aria-hidden="true" aria-labelledby="add_patient_modalLabel" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add_patient_modalLabel">Registration Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body m-3">
+                <form action="/add_patient" id="add_patient" method="POST" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                        <input type="text" id="firstName" name="firstname" class="form-control form-control-lg" />
+                        <label class="form-label" for="firstName">First Name</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                        <input type="text" id="lastName" name="lastname" class="form-control form-control-lg" />
+                        <label class="form-label" for="lastName">Last Name</label>
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                    <div class="form-outline datepicker w-100">
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="age"
+                        name="age"
+                        />
+                        <label for="birthdayDate" class="form-label">Age</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+
+                    <select class="form-select form-select-lg" name="gender" aria-label=".form-select-lg example">
+                        <option value="M" selected>M</option>
+                        <option value="F">F</option>
+                    </select>
+                    <label for="gender" class="form-label">Gender</label>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4 pb-2">
+
+                    <div class="form-outline">
+                        <input type="email" id="emailAddress" name="email" class="form-control form-control-lg" />
+                        <label class="form-label" for="emailAddress">Email</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4 pb-2">
+
+                    <div class="form-outline">
+                        <input type="tel" id="phoneNumber" name="phone" class="form-control form-control-lg" />
+                        <label class="form-label" for="phoneNumber">Phone Number</label>
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="form-outline">
+                    <textarea class="form-control" id="note" name="note" rows="4"></textarea>
+                    <label class="form-label" for="textAreaExample">Notes</label>
+                </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="mt-4 pt-2">
+                    <input class="btn btn-success btn-lg" form="add_patient" type="submit" value="Save" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDIT PATIENT -->
+<div class="modal fade" id="edit_patient_modal" aria-hidden="true" aria-labelledby="edit_patient_modalLabel" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body m-3">
+                <form action="" id="update_patient" method="POST" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                        <input type="text" id="patient_firstname" name="firstname" class="form-control form-control-lg" />
+                        <label class="form-label" for="firstName">First Name</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+
+                    <div class="form-outline">
+                        <input type="text" id="patient_lastname" name="lastname" class="form-control form-control-lg" />
+                        <label class="form-label" for="lastName">Last Name</label>
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                    <div class="form-outline datepicker w-100">
+                        <input
+                        type="text"
+                        class="form-control form-control-lg"
+                        id="patient_age"
+                        name="age"
+                        />
+                        <label for="birthdayDate" class="form-label">Age</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+
+                    <select class="form-select form-select-lg" id="patient_gender" name="gender" aria-label=".form-select-lg example">
+                        <option value="M" selected>M</option>
+                        <option value="F">F</option>
+                    </select>
+                    <label for="gender" class="form-label">Gender</label>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4 pb-2">
+
+                    <div class="form-outline">
+                        <input type="email" id="patient_email" name="email" class="form-control form-control-lg" />
+                        <label class="form-label" for="email">Email</label>
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4 pb-2">
+
+                    <div class="form-outline">
+                        <input type="tel" id="patient_phone" name="phone" class="form-control form-control-lg" />
+                        <label class="form-label" for="phone">Phone Number</label>
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="form-outline">
+                    <textarea class="form-control" id="patient_note" name="note" rows="4"></textarea>
+                    <label class="form-label" for="note">Notes</label>
+                </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="mt-4 pt-2">
+                    <input class="btn btn-success btn-lg" form="update_patient" type="submit" value="Update" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DELETE PATIENT -->
+<div id="delete_patient_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="delete_patient" action="">
+                <div class="modal-header">						
+                    <h4 class="modal-title">Delete Patient</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">					
+                    <p>Are you sure you want to delete <span class="fw-bold" id="patient_name"></span>'s Record?</p>
+                    <p class="text-warning"><small>This will be a permanent.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-bs-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ALL DELETE PATIENT -->
+<div id="delete_all_patient_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">						
+                    <h4 class="modal-title">Delete Patient</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">					
+                    <p>Are you sure you want to delete these Records?</p>
+                    <!-- <p class="text-warning"><small>This action cannot be undone.</small></p> -->
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-bs-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

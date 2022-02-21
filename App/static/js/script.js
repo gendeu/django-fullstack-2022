@@ -1,6 +1,5 @@
 $(document).ready(function(){
     
-    
     // LOGIN FORM CONTROL
     $("#username").on('keyup',function(){
         $("#close_alert_login").click();
@@ -58,6 +57,12 @@ $(document).ready(function(){
 		}
 	});
 
+    var no_patient_data = $("#check_patient_data").length;
+    
+    if (no_patient_data == 0){
+        $("#no_patient_data").text("No data Found.");
+    }
+
 // EDIT PATIENT MODAL
     $('table').on('click', 'button.edit_patient_click',function (ele) {
         //the <tr> variable is use to set the parentNode from "ele
@@ -87,34 +92,32 @@ $(document).ready(function(){
         $('#patient_note').val(patient_note);
         $('#patient_created_at').val(patient_created);
 
+        $("form#update_patient").attr('action', '../update_patient/'+patient_id);
         $("#edit_patient_modal").modal("show");
         //If you need to update the form data and change the button link
-        // $("form#ModalForm").attr('action', window.location.href+'/update/'+id);
         // $("a#saveModalButton").attr('href', window.location.href+'/update/'+id);
     });
 
 
-    // $("#edit_patient_click").click(function(){
-    //     var $row = $(this).closest('tr');
-    //     var patient_id = $row.find('#patient_id').text();
-    //     var firstname =  $row.find('#firstname').text();
-    //     var lastname =  $row.find('#lastname').text();
-    //     var email =  $row.find('#email').text();
-    //     var age =  $row.find('#age').text();
-    //     var gender =  $row.find('#gender').text();
-    //     var phone =  $row.find('#phone').text();
-    //     var note =  $row.find('#note').text();
-    //     var created_at =  $row.find('#created_at').text();
+// DELETE PATIENT MODAL
+    $('table').on('click', 'button.delete_patient_click',function (ele) {
+        //the <tr> variable is use to set the parentNode from "ele
+        var tr = ele.target.parentNode.parentNode;
+
+        var patient_firstname = tr.cells[2].textContent;
+        var patient_lastname = tr.cells[3].textContent;
+        //I get the value from the cells (td) using the parentNode (var tr)
         
-    //     console.log(patient_id);
-    //     // $('#patient_firstname').val(firstname);
-    //     // $('#patient_lastname').val(lastname);
-    //     // $('#patient_email').val(email);
-    //     // $('#patient_age').val(age);
-    //     // $('#patient_gender').val(gender);
-    //     // $('#patient_phone').val(phone);
-    //     // $('#patient_note').val(note);
-    //     // $('#patient_created_at').val(created_at);
-    // });
+        var patient_id = tr.cells[1].textContent;
+        console.log(patient_id);
+        //Prefill the fields with the gathered information
+
+        $('#patient_name').text(patient_firstname+' '+patient_lastname);
+
+        $("form#delete_patient").attr('action', '../delete_patient/'+patient_id);
+        $("#delete_patient_modal").modal("show");
+        //If you need to update the form data and change the button link
+        // $("a#saveModalButton").attr('href', window.location.href+'/update/'+id);
+    });
 
  });
